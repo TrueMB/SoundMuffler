@@ -1,0 +1,40 @@
+#ALL CHANGES NEEDS A RESTART TO TAKE AFFECT
+#
+Options:
+  #Sends anonymous data to bstats. (OnlinePlayers, Server Version, etc) But no personal Informations!
+  useMetrics: true
+#Permissions
+Permissions:
+  #For important commands
+  admin: 'sm.admin'
+#If you got no SubID or using a newer Minecraft Version, then just leave the subID 0 or remove it.
+#Since the newer Versions doors need to be the door_item.
+GUI:
+  Settings:
+    displayName: '&6&lSound Muffler Settings'
+    #Must be one of 9, 18, 27, 36, 45, 54
+    size: 27
+    denyAnimalSounds:
+      type: CHICKEN_SPAWN_EGG
+      subId: 0
+      name: '&6Animals &7- &cMuted'
+      lore:
+        - '&fCurrently the Sounds'
+        - '&ffor Animals are muted.'
+      enchantmentAnimation: true
+    allowAnimalSounds:
+      type: CHICKEN_SPAWN_EGG
+      name: '&6Animals &7- &aAllowed'
+      lore:
+        - '&fCurrently the Sounds'
+        - '&ffor Animals are active.'
+      enchantmentAnimation: false
+Messages:
+  prefix: '&7[&6&lSouind&fMuffler&7]'
+  perm: '&cYou dont have enough Permissions!'
+  console: 'Sorry, this only works Ingame.'
+  reloaded: '&a&lPlugin was reloaded.'
+  help: '&cPlease use &f/sm reload &cor &f/sm item <amount>&c.'
+
+  #Do NOT touch
+ConfigVersion: 1
