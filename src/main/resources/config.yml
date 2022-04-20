@@ -3,38 +3,185 @@
 Options:
   #Sends anonymous data to bstats. (OnlinePlayers, Server Version, etc) But no personal Informations!
   useMetrics: true
+  #Distance which should be affected around the head
+  distance: 16.0
 #Permissions
 Permissions:
   #For important commands
   admin: 'sm.admin'
-#If you got no SubID or using a newer Minecraft Version, then just leave the subID 0 or remove it.
-#Since the newer Versions doors need to be the door_item.
+Items:
+  Muffler:
+    displayName: '&f&lSound Muffler'
+    #Hash must be from minecraft.net. Text it here: http://textures.minecraft.net/texture/%HASH%
+    headHash: '4f130f485c3f7697f320ddc1128cd3f17cdbd3791764f7a7bb95cf252738588'
+#The Interfaces for different Settings
 GUI:
   Settings:
     displayName: '&6&lSound Muffler Settings'
-    #Must be one of 9, 18, 27, 36, 45, 54
-    size: 27
-    denyAnimalSounds:
-      type: CHICKEN_SPAWN_EGG
-      subId: 0
-      name: '&6Animals &7- &cMuted'
-      lore:
-        - '&fCurrently the Sounds'
-        - '&ffor Animals are muted.'
-      enchantmentAnimation: true
-    allowAnimalSounds:
-      type: CHICKEN_SPAWN_EGG
-      name: '&6Animals &7- &aAllowed'
-      lore:
-        - '&fCurrently the Sounds'
-        - '&ffor Animals are active.'
-      enchantmentAnimation: false
+    items:
+      spaceItem:
+        type: MAGENTA_STAINED_GLASS_PANE
+        name: ''
+        lore: {}
+        enchantmentAnimation: true
+
+      denyAmbientSounds:
+        type: NOTE_BLOCK
+        name: '&6Ambient &7- &cMuted'
+        lore:
+          - '&fCurrently the Ambient'
+          - '&fSounds are muted.'
+        enchantmentAnimation: true
+      allowAmbientSounds:
+        type: NOTE_BLOCK
+        name: '&6Ambient &7- &aAllowed'
+        lore:
+          - '&fCurrently the Ambient'
+          - '&fSounds are active.'
+        enchantmentAnimation: false
+
+      denyBlocksSounds:
+        type: GRASS_BLOCK
+        name: '&6Blocks &7- &cMuted'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&fof Blocks are muted.'
+        enchantmentAnimation: true
+      allowBlocksSounds:
+        type: GRASS_BLOCK
+        name: '&6Blocks &7- &aAllowed'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&fof Blocks are active.'
+        enchantmentAnimation: false
+
+      denyHostileSounds:
+        type: CREEPER_SPAWN_EGG
+        name: '&6Monsters &7- &cMuted'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&ffor Monsters are muted.'
+        enchantmentAnimation: true
+      allowHostileSounds:
+        type: CREEPER_SPAWN_EGG
+        name: '&6Monsters &7- &aAllowed'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&ffor Monsters are active.'
+        enchantmentAnimation: false
+
+      denyMasterSounds:
+        type: REDSTONE_BLOCK
+        name: '&6Master &7- &cMuted'
+        lore:
+          - '&fCurrently the Master'
+          - '&fSounds are muted.'
+        enchantmentAnimation: true
+      allowMasterSounds:
+        type: REDSTONE_BLOCK
+        name: '&6Master &7- &aAllowed'
+        lore:
+          - '&fCurrently the Master'
+          - '&fSounds are active.'
+        enchantmentAnimation: false
+
+      denyMusicSounds:
+        type: MUSIC_DISC_CAT
+        name: '&6Music &7- &cMuted'
+        lore:
+          - '&fCurrently the Music'
+          - '&fis muted.'
+        enchantmentAnimation: true
+      allowMusicSounds:
+        type: MUSIC_DISC_CAT
+        name: '&6Music &7- &aAllowed'
+        lore:
+          - '&fCurrently the'
+          - '&fMusic active.'
+        enchantmentAnimation: false
+
+      denyNeutralSounds:
+        type: CHICKEN_SPAWN_EGG
+        name: '&6Animals &7- &cMuted'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&ffor Animals are muted.'
+        enchantmentAnimation: true
+      allowNeutralSounds:
+        type: CHICKEN_SPAWN_EGG
+        name: '&6Animals &7- &aAllowed'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&ffor Animals are active.'
+        enchantmentAnimation: false
+
+      denyPlayersSounds:
+        type: PLAYER_HEAD
+        name: '&6Other Players &7- &cMuted'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&fof Players are muted.'
+          - '&7(Not your own Sounds!)'
+        enchantmentAnimation: true
+      allowPlayersSounds:
+        type: PLAYER_HEAD
+        name: '&6Other Players &7- &aAllowed'
+        lore:
+          - '&fCurrently the Sounds'
+          - '&fof Players are active.'
+          - '&7(Not your own Sounds!)'
+        enchantmentAnimation: false
+
+      denyRecordsSounds:
+        type: JUKEBOX
+        name: '&6Music Discs &7- &cMuted'
+        lore:
+          - '&fCurrently Music Discs'
+          - '&fare muted.'
+        enchantmentAnimation: true
+      allowRecordsSounds:
+        type: JUKEBOX
+        name: '&6Music Discs &7- &aAllowed'
+        lore:
+          - '&fCurrently Music Discs'
+          - '&fare active.'
+        enchantmentAnimation: false
+
+      denyVoiceSounds:
+        type: ENDER_EYE
+        name: '&6Voices &7- &cMuted'
+        lore:
+          - '&fCurrently Voices'
+          - '&fare muted.'
+        enchantmentAnimation: true
+      allowVoiceSounds:
+        type: ENDER_EYE
+        name: '&6Voices &7- &aAllowed'
+        lore:
+          - '&fCurrently Voices'
+          - '&fare active.'
+        enchantmentAnimation: false
+
+      denyWeatherSounds:
+        type: TRIDENT
+        name: '&6Weather &7- &cMuted'
+        lore:
+          - '&fCurrently Weather'
+          - '&fSounds are muted.'
+        enchantmentAnimation: true
+      allowWeatherSounds:
+        type: TRIDENT
+        name: '&6Weather &7- &aAllowed'
+        lore:
+          - '&fCurrently Weather'
+          - '&fSounds are active.'
+        enchantmentAnimation: false
 Messages:
   prefix: '&7[&6&lSouind&fMuffler&7]'
   perm: '&cYou dont have enough Permissions!'
   console: 'Sorry, this only works Ingame.'
   reloaded: '&a&lPlugin was reloaded.'
-  help: '&cPlease use &f/sm reload &cor &f/sm item <amount>&c.'
+  help: '&cPlease use &f/sm reload &cor &f/sm item&c.'
 
   #Do NOT touch
 ConfigVersion: 1

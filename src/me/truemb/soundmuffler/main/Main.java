@@ -6,15 +6,20 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.BlockVector;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -25,17 +30,25 @@ import com.jeff_media.updatechecker.UpdateCheckSource;
 import com.jeff_media.updatechecker.UpdateChecker;
 import com.jeff_media.updatechecker.UserAgentBuilder;
 import me.truemb.soundmuffler.commands.SoundMufflerCOMMAND;
+import me.truemb.soundmuffler.filemanager.DataFileManager;
+import me.truemb.soundmuffler.listener.SettingsGUIListener;
 import me.truemb.soundmuffler.utils.ConfigUpdater;
+import me.truemb.soundmuffler.utils.SkullManager;
 import me.truemb.soundmuffler.utils.UTF8YamlConfiguration;
 
 public class Main extends JavaPlugin {
 
 	private UTF8YamlConfiguration config;
+	private DataFileManager dataFileManager;
 
 	private ProtocolManager protocolManager;
 
 	// NAMESPACES
-	public NamespacedKey guiItem = new NamespacedKey(this, "guiItem");
+	public NamespacedKey guiItemKey = new NamespacedKey(this, "guiItem");
+	public NamespacedKey guiSoundCategory = new NamespacedKey(this, "guiSoundCategory");
+	
+	public NamespacedKey soundMufflerKey = new NamespacedKey(this, "SoundMuffler");
+	public NamespacedKey sm_IDKey = new NamespacedKey(this, "SM_ID");
 
 	private static final int configVersion = 1;
 	private static final String SPIGOT_RESOURCE_ID = ""; // TODO
@@ -46,9 +59,14 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.manageFile();
+		
+		this.dataFileManager = new DataFileManager(this);
 
 		// COMMANDS
 		new SoundMufflerCOMMAND(this);
+		
+		//LISTENER
+		new SettingsGUIListener(this);
 
 		// METRICS ANALYTICS
 		if (this.manageFile().getBoolean("Options.useMetrics"))
@@ -56,16 +74,15 @@ public class Main extends JavaPlugin {
 
 		// UPDATE CHECKER
 		//TODO this.checkForUpdate();
-
-		ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-		protocolManager.addPacketListener(
+				
+		this.protocolManager.addPacketListener(
 			new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.NAMED_SOUND_EFFECT) {
 				
+				@SuppressWarnings("unused") //volume, pitch and sound not used yet
 				@Override
 				public void onPacketSending(PacketEvent e) {
 					
 					if (e.getPacketType() == PacketType.Play.Server.NAMED_SOUND_EFFECT) {
-						e.setCancelled(true);
 						
 			            PacketContainer packet = e.getPacket();
 			            
@@ -75,20 +92,62 @@ public class Main extends JavaPlugin {
 			            float volume = packet.getFloat().read(0);
 			            float pitch = packet.getFloat().read(1);
 			            
-			            //packet.getSoundCategories().getValues().forEach(soundCat -> System.out.println("SOUND CATEGORY: " + soundCat));
-			            //packet.getSoundEffects().getValues().forEach(soundEff -> System.out.println("SOUND EFFECT: " + soundEff));
+			            double x = packet.getIntegers().read(0) / 8;
+			            double y = packet.getIntegers().read(1) / 8;
+			            double z = packet.getIntegers().read(2) / 8;
+			            
+			            BlockVector vec = new BlockVector(x, y, z);
+			            ConfigurationSection sec = getDataFileManager().getConfig().getConfigurationSection("SoundMufflers");
+			            if(sec == null)
+			            	return;
+			            
+			            for(String ids : sec.getKeys(false)) {
+			            	if(!getDataFileManager().getConfig().isSet("SoundMufflers." + ids + ".Location"))
+			            		continue;
+			            	
+			            	double headX = getDataFileManager().getConfig().getDouble("SoundMufflers." + ids + ".Location.X");
+			            	double headY = getDataFileManager().getConfig().getDouble("SoundMufflers." + ids + ".Location.Y");
+			            	double headZ = getDataFileManager().getConfig().getDouble("SoundMufflers." + ids + ".Location.Z");
+			            	
+			            	BlockVector headVec = new BlockVector(headX, headY, headZ);
+			            	
+			            	double distance = headVec.distance(vec);
+			            	
+			            	if(distance <= manageFile().getDouble("Options.distance")) {
+			            		
+			            		//HEAD IS IN AFFECTED AREA
+			            		boolean value = getDataFileManager().getConfig().getBoolean("SoundMufflers." + String.valueOf(ids) + ".Categories." + StringUtils.capitalize(soundCategory.toString().toLowerCase()));
+			            		System.out.println(sound.toString());
+			            		if(value) {
+						            System.out.println("x: " + x + "; y: " + y + "; z: " + z);
+			            			System.out.println("SOUND CANCELED");
+			            			e.setCancelled(true);
+			            			return;
+			            		}
+			            	}
+			            	
+			            }
+			            
 					}
 				}
 				
 			});
-		
-		this.protocolManager = protocolManager;
-		
 	}
 
-	@Override
-	public void onDisable() {
+	public ItemStack getItem() {
+		return this.getItem(-1);
+	}
+	
+	public ItemStack getItem(int id) {
 
+		ItemStack item = SkullManager.getSkullOfTexture(ChatColor.translateAlternateColorCodes('&', this.manageFile().getString("Items.Muffler.displayName")), this.manageFile().getString("Items.Muffler.headHash"));
+		ItemMeta meta = item.getItemMeta();
+		meta.getPersistentDataContainer().set(this.soundMufflerKey, PersistentDataType.STRING, "true");
+		if(id >= 0)
+			meta.getPersistentDataContainer().set(this.sm_IDKey, PersistentDataType.INTEGER, id);
+		item.setItemMeta(meta);
+		
+		return item;
 	}
 
 	// CONFIG
@@ -160,6 +219,10 @@ public class Main extends JavaPlugin {
 
 	public ProtocolManager getProtocolManager() {
 		return this.protocolManager;
+	}
+
+	public DataFileManager getDataFileManager() {
+		return this.dataFileManager;
 	}
 
 }
