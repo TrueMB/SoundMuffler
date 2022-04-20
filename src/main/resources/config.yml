@@ -70,21 +70,6 @@ GUI:
           - '&ffor Monsters are active.'
         enchantmentAnimation: false
 
-      denyMasterSounds:
-        type: REDSTONE_BLOCK
-        name: '&6Master &7- &cMuted'
-        lore:
-          - '&fCurrently the Master'
-          - '&fSounds are muted.'
-        enchantmentAnimation: true
-      allowMasterSounds:
-        type: REDSTONE_BLOCK
-        name: '&6Master &7- &aAllowed'
-        lore:
-          - '&fCurrently the Master'
-          - '&fSounds are active.'
-        enchantmentAnimation: false
-
       denyMusicSounds:
         type: MUSIC_DISC_CAT
         name: '&6Music &7- &cMuted'
@@ -177,7 +162,7 @@ GUI:
           - '&fSounds are active.'
         enchantmentAnimation: false
 Messages:
-  prefix: '&7[&6&lSouind&fMuffler&7]'
+  prefix: '&7[&6&lSound&fMuffler&7]'
   perm: '&cYou dont have enough Permissions!'
   console: 'Sorry, this only works Ingame.'
   reloaded: '&a&lPlugin was reloaded.'

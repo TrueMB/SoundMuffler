@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BlockVector;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -55,6 +56,7 @@ public class Main extends JavaPlugin {
 	private static final int BSTATS_PLUGIN_ID = 14928;
 	
 	//TODO EDIT SOUND VOLUME?
+	//TODO Mute Exact Sounds as well and not only Categories
 	
 	@Override
 	public void onEnable() {
@@ -74,7 +76,8 @@ public class Main extends JavaPlugin {
 
 		// UPDATE CHECKER
 		//TODO this.checkForUpdate();
-				
+
+		this.protocolManager = ProtocolLibrary.getProtocolManager();
 		this.protocolManager.addPacketListener(
 			new PacketAdapter(this, ListenerPriority.NORMAL, PacketType.Play.Server.NAMED_SOUND_EFFECT) {
 				
@@ -117,10 +120,9 @@ public class Main extends JavaPlugin {
 			            		
 			            		//HEAD IS IN AFFECTED AREA
 			            		boolean value = getDataFileManager().getConfig().getBoolean("SoundMufflers." + String.valueOf(ids) + ".Categories." + StringUtils.capitalize(soundCategory.toString().toLowerCase()));
-			            		System.out.println(sound.toString());
 			            		if(value) {
-						            System.out.println("x: " + x + "; y: " + y + "; z: " + z);
-			            			System.out.println("SOUND CANCELED");
+			            			// System.out.println("x: " + x + "; y: " + y + "; z: " + z);
+			            			// System.out.println("SOUND CANCELED");
 			            			e.setCancelled(true);
 			            			return;
 			            		}
