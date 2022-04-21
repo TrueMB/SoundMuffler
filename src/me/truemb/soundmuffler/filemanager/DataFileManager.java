@@ -54,6 +54,7 @@ public class DataFileManager {
 			this.config.set("SoundMufflers." + String.valueOf(id) + ".Location.X", loc.getX());
 			this.config.set("SoundMufflers." + String.valueOf(id) + ".Location.Y", loc.getY());
 			this.config.set("SoundMufflers." + String.valueOf(id) + ".Location.Z", loc.getZ());
+			this.config.set("SoundMufflers." + String.valueOf(id) + ".Location.World", loc.getWorld().getName());
 		}else
 			this.config.set("SoundMufflers." + String.valueOf(id) + ".Location", null);
 		

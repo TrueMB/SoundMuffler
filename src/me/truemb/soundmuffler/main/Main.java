@@ -33,6 +33,7 @@ import com.jeff_media.updatechecker.UserAgentBuilder;
 import me.truemb.soundmuffler.commands.SoundMufflerCOMMAND;
 import me.truemb.soundmuffler.filemanager.DataFileManager;
 import me.truemb.soundmuffler.listener.SettingsGUIListener;
+import me.truemb.soundmuffler.listener.SoundMuteListener;
 import me.truemb.soundmuffler.utils.ConfigUpdater;
 import me.truemb.soundmuffler.utils.SkullManager;
 import me.truemb.soundmuffler.utils.UTF8YamlConfiguration;
@@ -69,6 +70,7 @@ public class Main extends JavaPlugin {
 		
 		//LISTENER
 		new SettingsGUIListener(this);
+		new SoundMuteListener(this);
 
 		// METRICS ANALYTICS
 		if (this.manageFile().getBoolean("Options.useMetrics"))
@@ -107,6 +109,10 @@ public class Main extends JavaPlugin {
 			            for(String ids : sec.getKeys(false)) {
 			            	if(!getDataFileManager().getConfig().isSet("SoundMufflers." + ids + ".Location"))
 			            		continue;
+			            	
+			            	String worldname = getDataFileManager().getConfig().getString("SoundMufflers." + ids + ".Location.World");
+			            	//if(worldname == null || !worldname.equalsIgnoreCase(loc.getWorld().getName()))
+			            	//TODO	continue;
 			            	
 			            	double headX = getDataFileManager().getConfig().getDouble("SoundMufflers." + ids + ".Location.X");
 			            	double headY = getDataFileManager().getConfig().getDouble("SoundMufflers." + ids + ".Location.Y");
